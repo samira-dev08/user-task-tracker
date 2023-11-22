@@ -1,0 +1,43 @@
+.container {
+    margin: 50px;
+    border: 70px solid dimgrey;
+    padding: 80px;
+}
+
+.registerbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 40%;
+}
+
+.registerbtn:hover {
+    opacity: 1;
+}
+
+h1 {
+    text-align: center;
+    color: green;
+}
+
+
+input[type=text], input[type=password] {
+    width: 60%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+form {
+    text-align: center;
+
+}
+
+body {
+    background-color: aliceblue;
+}

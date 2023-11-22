@@ -1,0 +1,40 @@
+server:
+  port: 8087
+
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/user_task_tracker
+    username: root
+    password: Galata97
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: samiraeyyubova08@gmail.com
+    password: ssbowyqyuuwetsey
+
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+
+
+  mvc:
+    view:
+      prefix: ./WEB-INF/pages/
+      suffix: .jsp
+
+
+app:
+  jwt:
+    secret: b134c5c6cc92ab686d4a442d4696c2b94e6bad79db3981beb415ace29b0ad331
+    exp: 600000
+
+
+
