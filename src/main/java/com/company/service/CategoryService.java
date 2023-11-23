@@ -5,6 +5,6 @@ import com.company.dto.response.CategoryResponse;
 import com.company.entity.Category;
 
 public interface CategoryService {
-    Category getCategoryById(Integer id);
+//    Category getCategoryById(Integer id);
     Category create(Category category);
 }

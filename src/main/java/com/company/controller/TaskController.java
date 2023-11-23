@@ -26,17 +26,11 @@ public class TaskController {
         return new ResponseEntity<>("Successfully updated task", HttpStatus.OK);
     }
 
-    @PostMapping("/delete-task/{taskId}")
+    @DeleteMapping("/delete-task/{taskId}")
     public ResponseEntity<?> deleteTask(@PathVariable Integer taskId ){
         taskService.deleteTask(taskId);
         return new ResponseEntity<>("Successfully deleted task", HttpStatus.OK);
     }
 
-//    @PostMapping("/delete-category-fromTask/{userId}")
-//    public ResponseEntity<?> deleteCategoryFromTask(@PathVariable Integer userId,
-//                                        @RequestParam Integer taskId) {
-//        taskService.deleteCategoryFromTask( userId);
-//        return new ResponseEntity<>("Successfully updated task", HttpStatus.OK);
-//    }
 
 }

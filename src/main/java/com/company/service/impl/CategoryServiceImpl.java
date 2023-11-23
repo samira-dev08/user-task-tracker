@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
-    @Override
-    public Category getCategoryById(Integer id) {
-        return categoryRepository.findById(id).get();
-    }
+//    @Override
+//    public Category getCategoryById(Integer id) {
+//        return categoryRepository.findById(id).get();
+//    }
 
     @Override
     public Category create(Category category) {

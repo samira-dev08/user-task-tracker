@@ -15,6 +15,7 @@ import com.company.repository.UserRepository;
 import com.company.service.UserService;
 import com.company.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,13 +33,13 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_]{3,30}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,}$";
     private static final long EXPIRE_TOKEN_AFTER_MINUTES = 30;
     private static final Pattern patternUsername = Pattern.compile(USERNAME_PATTERN);
     private static final Pattern patternPass = Pattern.compile(PASSWORD_PATTERN);
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -58,10 +59,10 @@ public class UserServiceImpl implements UserService {
                     HttpStatus.BAD_REQUEST);
         }
         if (!isValidPass(signupRequest.getPassword())) {
-            return new ResponseEntity<>("Error:" + signupRequest.getPassword() + " password must contain" +
+            return new ResponseEntity<>("Error:" + signupRequest.getPassword() + " password must contain " +
                     "Min 1 uppercase letter.\n" +
                     "Min 1 lowercase letter.\n" +
-                    "Min 1 special character.\n" +
+                    "Min 1 special character as #$@!%&*?.\n" +
                     "Min 1 number.\n" +
                     "Min 8 characters.",
                     HttpStatus.BAD_REQUEST);
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     public String createResetTokenAndSendMailMessage(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("Invalid email"));
+                .orElseThrow(() -> new UserNotFoundException("Not found User!"));
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setUser(user);
         passwordResetToken.setToken(generateToken());

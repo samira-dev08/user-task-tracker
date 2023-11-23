@@ -18,17 +18,9 @@ public class UserController {
     }
 
     @PutMapping("/reset-password")
-    public String resetPassword(@RequestParam String token,
-                                @RequestParam String password) {
+    public ResponseEntity<?> resetPassword(@RequestParam String token,
+                                @RequestParam String newPassword) {
 
-        return userService.resetPassword(token, password);
+        return new ResponseEntity<>(userService.resetPassword(token, newPassword),HttpStatus.OK);
     }
-
-//    @PutMapping("/remember-me")
-//    public String rememberMePassword(@RequestParam String token,
-//                               @RequestParam String email,
-//                                     @RequestParam String series) {
-//
-//        return userService.rememberMe(token,email,series);
-//    }
 }

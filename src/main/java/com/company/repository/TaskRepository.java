@@ -13,10 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task,Integer> {
-
-    Optional<List<Category>> findCategoryById(Integer taskId);
-
-    Optional<List<Task>> findTasksByCategoryId(Integer categoryId);
     @Query(value = "SELECT j FROM Task j WHERE  j.status=?1 ")
     Optional<List<Task>> findTaskByStatus(TaskStatus taskStatus);
 

@@ -25,7 +25,7 @@ public class JwtUtil {
     public String generateAccessToken(Authentication authentication ) {
         User userPrincipal = (User) authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setSubject(userPrincipal.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
                 .signWith(key())

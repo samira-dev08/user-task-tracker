@@ -2,16 +2,11 @@ package com.company.controller;
 
 import com.company.dto.request.LoginRequest;
 import com.company.dto.request.SignupRequest;
-import com.company.dto.response.JwtResponse;
-import com.company.entity.User;
+import com.company.dto.response.MessageResponse;
 import com.company.service.UserService;
-import com.company.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
@@ -27,9 +22,10 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public String login(@Valid @RequestBody LoginRequest loginRequest) {
+    public MessageResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = userService.login(loginRequest);
-        return token;
+        return new MessageResponse("token is: " +
+                token);
     }
 
     @PostMapping("/confirm-account")

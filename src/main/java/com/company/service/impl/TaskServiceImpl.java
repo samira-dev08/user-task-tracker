@@ -34,19 +34,19 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final UserRepository userRepository;
 
-    @Override
-    public TaskResponse getTaskById(Integer id) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new TaskNotFoundException("task not found in this id"));
-        return taskMapper.toTaskResponse(task);
-    }
+//    @Override
+//    public TaskResponse getTaskById(Integer id) {
+//        Task task = taskRepository.findById(id)
+//                .orElseThrow(() -> new TaskNotFoundException("task not found in this id"));
+//        return taskMapper.toTaskResponse(task);
+//    }
 
-    @Override
-    public List<TaskResponse> getAllTasks() {
-        return taskRepository.findAll().stream()
-                .map(task -> taskMapper.toTaskResponse(task))
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<TaskResponse> getAllTasks() {
+//        return taskRepository.findAll().stream()
+//                .map(task -> taskMapper.toTaskResponse(task))
+//                .collect(Collectors.toList());
+//    }
 
 
     @Override
@@ -99,24 +99,26 @@ public class TaskServiceImpl implements TaskService {
         updated.setUpdatedAt(LocalDateTime.now());
         return taskRepository.save(updated);
     }
-    @Override
-    public List<Category> getAllCategoriesByTaskId(Integer taskId) {//("/tasks/{taskId}/categories")
-        if (!taskRepository.existsById(taskId)) {
-            throw new TaskNotFoundException("not found task");
-        }
-        return
-                taskRepository.findCategoryById(taskId)
-                        .orElseThrow(() -> new CategoryNotFoundException("not found category"));
-    }
 
 
-    @Override
-    public List<TaskResponse> getTasksByStatus(TaskStatus taskStatus) {
-        return null;
-    }
+//    @Override
+//    public List<Category> getAllCategoriesByTaskId(Integer taskId) {//("/tasks/{taskId}/categories")
+//        if (!taskRepository.existsById(taskId)) {
+//            throw new TaskNotFoundException("not found task");
+//        }
+//        return
+//                taskRepository.findCategoryById(taskId)
+//                        .orElseThrow(() -> new CategoryNotFoundException("not found category"));
+//    }
 
-    @Override
-    public List<TaskResponse> getTasksByPriority(PriorityStatus priorityStatus) {
-        return null;
-    }
+
+//    @Override
+//    public List<TaskResponse> getTasksByStatus(TaskStatus taskStatus) {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<TaskResponse> getTasksByPriority(PriorityStatus priorityStatus) {
+//        return null;
+//    }
 }

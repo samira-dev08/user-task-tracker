@@ -20,7 +20,7 @@ public class EmailScheduler {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @Scheduled(fixedDelay = 3000, initialDelay = 1000)
+    @Scheduled(fixedDelay = 10000, initialDelay = 1000)
     public void sendEmailByThread() {
         List<User> listUsers =userRepository.findByEmailStatus(EmailStatus.NEW)
                 .orElseThrow(() -> new UserNotFoundException("Not found new registered user"));

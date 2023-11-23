@@ -11,12 +11,16 @@ import org.mapstruct.*;
 public interface TaskMapper {
 
     Task toTask(TaskRequest taskRequest);
+
     @Mapping(source = "name",target = "name", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "description",target = "description", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "priority",target = "priority", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "deadline",target = "deadline", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "status",target = "status", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Task updateTask(@MappingTarget Task task, TaskRequest request);
+
+
     TaskResponse toTaskResponse(Task task);
+
     Category toCategory(CategoryRequest categoryRequest);
 }

@@ -5,7 +5,6 @@ import com.company.security.AuthEntryPointJwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -37,8 +36,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                                 .antMatchers("/api/v1/auth/sign-up").permitAll()
-                                .antMatchers("/api/v1/auth/sign-in").hasAnyAuthority("USER")
-                                .antMatchers("/api/v1/user/**").hasAnyAuthority("USER")
+                                .antMatchers("/api/v1/auth/sign-in").permitAll()
+                                .antMatchers("/api/v1/user/**").permitAll()
                 )
 //                    .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository())
 
@@ -71,7 +70,7 @@ public class SecurityConfig {
     }
 
     @Bean
-   public PersistentTokenRepository persistentTokenRepository(){
+   public PersistentTokenRepository persistentTokenRepository(){// for remember me
         JdbcTokenRepositoryImpl tokenRepository=new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
         return  tokenRepository;

@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestControllerAdvice
-public class CustomizedException extends ResponseEntityExceptionHandler {
+public class CustomizedException  {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public final ErrorDetails handleUserError(Exception ex){
+    public final ErrorDetails handleUserError(UserNotFoundException ex){
         return ErrorDetails.builder()
                 .uniqueExceptionId(UUID.randomUUID())
                 .message(ex.getMessage())
@@ -26,14 +26,13 @@ public class CustomizedException extends ResponseEntityExceptionHandler {
                 .build();
     }
     @ExceptionHandler(TaskNotFoundException.class)
-    public final ErrorDetails handleTaskError(Exception ex){
+    public final ErrorDetails handleTaskError(TaskNotFoundException ex){
         return ErrorDetails.builder()
                 .uniqueExceptionId(UUID.randomUUID())
                 .message(ex.getMessage())
                 .timeStamp(LocalDate.now())
                 .build();
     }
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<?> handleInvalidArgument(MethodArgumentNotValidException ex)  {
         Map<String, String> errorMap =  new HashMap<>();

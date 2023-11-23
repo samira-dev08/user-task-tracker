@@ -25,12 +25,6 @@ spring:
       starttls.enable: true
 
 
-  mvc:
-    view:
-      prefix: ./WEB-INF/pages/
-      suffix: .jsp
-
-
 app:
   jwt:
     secret: b134c5c6cc92ab686d4a442d4696c2b94e6bad79db3981beb415ace29b0ad331

@@ -10,13 +10,9 @@ import com.company.enums.TaskStatus;
 import java.util.List;
 
 public interface TaskService {
-    TaskResponse getTaskById(Integer id);
-    public List<TaskResponse> getAllTasks();
-    public List<Category> getAllCategoriesByTaskId(Integer taskId);
     Task createTask(TaskRequest taskRequest, Integer userId);
-    void deleteTask(Integer taskId);
-    Task updateTask(TaskRequest taskRequest, Integer taskId, Integer userId);
-    List<TaskResponse> getTasksByStatus(TaskStatus taskStatus);
-    List<TaskResponse> getTasksByPriority(PriorityStatus priorityStatus);
 
+    void deleteTask(Integer taskId);
+
+    Task updateTask(TaskRequest taskRequest, Integer taskId, Integer userId);
 }
