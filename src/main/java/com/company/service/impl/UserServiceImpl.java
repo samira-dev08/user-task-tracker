@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -49,23 +51,19 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
 
     @Override
-    public ResponseEntity<?> registerUser(SignupRequest signupRequest) {
+    public User registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            return new ResponseEntity<>("Error:" + signupRequest.getEmail() + " Email is already in use!",
-                    HttpStatus.BAD_REQUEST);
+            throw new BadCredentialsException(signupRequest.getEmail() + " Email is already in use!");
         }
         if (!isValidUsername(signupRequest.getUsername())) {
-            return new ResponseEntity<>("Error:" + signupRequest.getUsername() + " username is not valid!",
-                    HttpStatus.BAD_REQUEST);
+            throw new BadCredentialsException(signupRequest.getUsername() + " username is not valid!");
         }
         if (!isValidPass(signupRequest.getPassword())) {
-            return new ResponseEntity<>("Error:" + signupRequest.getPassword() + " password must contain " +
+            throw new BadCredentialsException(signupRequest.getPassword() + " password must contain \n" +
                     "Min 1 uppercase letter.\n" +
                     "Min 1 lowercase letter.\n" +
                     "Min 1 special character as #$@!%&*?.\n" +
-                    "Min 1 number.\n" +
-                    "Min 8 characters.",
-                    HttpStatus.BAD_REQUEST);
+                    "Min 1 number.");
         }
 
         // Create new user's account
@@ -79,9 +77,7 @@ public class UserServiceImpl implements UserService {
                 .emailStatus(EmailStatus.NEW)
                 .build();
 
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+       return userRepository.save(user);
     }
 
     @Override
@@ -106,7 +102,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             return ResponseEntity.ok("Email verified successfully!");
         }
-        return ResponseEntity.badRequest().body("Error: Email could not be verified!");
+        return ResponseEntity.badRequest().body(" Email could not be verified!");
     }
 
     @Override
@@ -118,7 +114,7 @@ public class UserServiceImpl implements UserService {
         mailMessage.setTo(user.getEmail());
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setText("To confirm your account, please click here : "
-                + "http://localhost:8087/auth/confirm-account?token=" + confirmationToken.getConfirmationToken());
+                + "http://localhost:8087/api/v1/auth/confirm-account?token=" + confirmationToken.getConfirmationToken());
 
 
         return ResponseEntity.ok(mailMessage).getBody();
@@ -129,7 +125,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("Not found User!"));
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setUser(user);
-        passwordResetToken.setToken(generateToken());
+        passwordResetToken.setToken(jwtUtil.generateTokenFromUsername(email));
         passwordResetToken.setTokenCreationDate(LocalDateTime.now());
         passwordResetRepository.save(passwordResetToken);
 
@@ -137,23 +133,37 @@ public class UserServiceImpl implements UserService {
         mailMessage.setTo(email);
         mailMessage.setSubject("Complete Reset Password!");
         mailMessage.setText("To reset your password, please click here : "
-                + "http://localhost:8087/user/reset-password?token=" + passwordResetToken.getToken());
+                + "http://localhost:8087/api/v1/user/reset-password?token=" + passwordResetToken.getToken());
 
         emailService.sendEmail(mailMessage);
         return passwordResetToken.getToken();
+    }
+
+    @Override
+    public List<User> findByEmailStatus(EmailStatus emailStatus) {
+        return userRepository.findByEmailStatus(EmailStatus.NEW).get();
     }
 
     public String resetPassword(String token, String password) {
 
         PasswordResetToken passwordResetToken = passwordResetRepository.findByToken(token)
                 .orElseThrow(() -> new UserNotFoundException("Invalid token"));
+        jwtUtil.validateToken(token);
 
-        LocalDateTime tokenCreationDate = passwordResetToken.getTokenCreationDate();
-
-        if (isTokenExpired(tokenCreationDate)) {
-            return "Token expired.";
+//        LocalDateTime tokenCreationDate = passwordResetToken.getTokenCreationDate();
+//        if (isTokenExpired(tokenCreationDate)) {
+//            return "Token expired.";
+//        }
+        if (!isValidPass(password)) {
+            throw new BadCredentialsException(password + " password must contain " +
+                    "\n Min 1 uppercase letter." +
+                    "\n Min 1 lowercase letter." +
+                    "\n Min 1 special character as #$@!%&*?." +
+                    "\n Min 1 number.");
         }
-        User user = passwordResetToken.getUser();
+        String email=jwtUtil.getUserNameFromJwtToken(token);
+        User user=userRepository.findByEmail(email).get();
+        //User user = passwordResetToken.getUser();
         user.setPassword(passwordEncoder.encode(password));
         passwordResetToken.setToken(null);
         passwordResetToken.setTokenCreationDate(null);
@@ -185,4 +195,10 @@ public class UserServiceImpl implements UserService {
 
         return diff.toMinutes() >= EXPIRE_TOKEN_AFTER_MINUTES;
     }
+    @Override
+    public String createRefreshToken(String username) {
+        return jwtUtil.generateRefreshTokenFromUsername(username);
+    }
+
+
 }

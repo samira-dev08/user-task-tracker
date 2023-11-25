@@ -27,8 +27,11 @@ spring:
 
 app:
   jwt:
-    secret: b134c5c6cc92ab686d4a442d4696c2b94e6bad79db3981beb415ace29b0ad331
-    exp: 600000
+    token:
+      prefix: Bearer
+    secret: asdsadsadsadsadasdasdsadsadsadasdasdasdsadasdasdasdsadadsadsadsadasdasdasdasdaasdddfdasdsadsadsadsadasdasdsaasdsadsadsadsadasdasdsa
+    exp: 300000
+    refresh: 1000000
 
 
 

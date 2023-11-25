@@ -26,24 +26,24 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
-    private final AuthEntryPointJwt unauthorizedHandler;
+    private final AuthEntryPointJwt authEntryPointJwt;
     private final PasswordEncoder passwordEncoder;
     private final  DataSource dataSource;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                                .antMatchers("/api/v1/auth/sign-up").permitAll()
-                                .antMatchers("/api/v1/auth/sign-in").permitAll()
+                                .antMatchers("/api/v1/auth/**").permitAll()
                                 .antMatchers("/api/v1/user/**").permitAll()
+                        .anyRequest().authenticated()
+
                 )
 //                    .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository())
 
             ;
-
-        http.authenticationProvider(authenticationProvider());
+//        http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -68,6 +68,8 @@ public class SecurityConfig {
             throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
+
 
     @Bean
    public PersistentTokenRepository persistentTokenRepository(){// for remember me

@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
 import java.security.Key;
 import java.util.Date;
 
@@ -17,9 +16,29 @@ import java.util.Date;
 public class JwtUtil {
     @Value("${app.jwt.secret}")
     private String SECRET_KEY;
-    @Value("${app.jwt.exp}")
-    private Integer EXPIRE_DURATION;
+    @Value("${app.jwt.exp} ")
+    private Integer EXPIRE_TOKEN_DURATION;
+    @Value("${app.jwt.refresh}")
+    private Integer EXPIRE_REFRESH_TOKEN_DURATION;
 
+
+    public Claims extractClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
+    }
+
+    //refreshToken
+    public String generateRefreshTokenFromUsername(String username) {
+        return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + EXPIRE_REFRESH_TOKEN_DURATION)).signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
+    }
+
+//token
+    public String generateTokenFromUsername(String username) {
+        return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + EXPIRE_TOKEN_DURATION)).signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
+    }
 
 
     public String generateAccessToken(Authentication authentication ) {
@@ -27,7 +46,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(userPrincipal.getEmail())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_TOKEN_DURATION))
                 .signWith(key())
                 .compact();
     }

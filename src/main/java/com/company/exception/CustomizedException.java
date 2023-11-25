@@ -17,6 +17,17 @@ import java.util.UUID;
 @RestControllerAdvice
 public class CustomizedException  {
 
+    @ExceptionHandler(value = TokenRefreshException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorDetails handleTokenRefreshException(TokenRefreshException ex) {
+        return  ErrorDetails.builder()
+                .uniqueExceptionId(UUID.randomUUID())
+                .timeStamp(LocalDate.now())
+                .message(ex.getMessage())
+                .details(null)
+                .build();
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public final ErrorDetails handleUserError(UserNotFoundException ex){
         return ErrorDetails.builder()
@@ -42,6 +53,9 @@ public class CustomizedException  {
 
         return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
     }
+
+
+
     @ExceptionHandler(Exception.class)
     public final ErrorDetails handleGlobalError(Exception ex){
         return ErrorDetails.builder()

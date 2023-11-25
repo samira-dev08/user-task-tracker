@@ -13,11 +13,12 @@ public class UserController {
     private final UserService userService;
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam String email) {
-        userService.createResetTokenAndSendMailMessage(email);
-        return new ResponseEntity<>("successfully sent reset mail to: "+email, HttpStatus.OK);
+        String resetToken=userService.createResetTokenAndSendMailMessage(email);
+        return new ResponseEntity<>("successfully sent reset mail to: "+email+"\n reset token: "+resetToken,
+                HttpStatus.OK);
     }
 
-    @PutMapping("/reset-password")
+    @RequestMapping(value = "/reset-password",method = {RequestMethod.GET,RequestMethod.POST})
     public ResponseEntity<?> resetPassword(@RequestParam String token,
                                 @RequestParam String newPassword) {
 

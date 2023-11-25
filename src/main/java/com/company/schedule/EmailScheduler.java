@@ -22,9 +22,7 @@ public class EmailScheduler {
 
     @Scheduled(fixedDelay = 10000, initialDelay = 1000)
     public void sendEmailByThread() {
-        List<User> listUsers =userRepository.findByEmailStatus(EmailStatus.NEW)
-                .orElseThrow(() -> new UserNotFoundException("Not found new registered user"));
-
+        List<User> listUsers =userService.findByEmailStatus(EmailStatus.NEW);
         for (User user : listUsers) {
             SimpleMailMessage mailMessage = userService.createConfirmationTokenAndMailMessage(user);
             emailService.sendEmail(mailMessage);
