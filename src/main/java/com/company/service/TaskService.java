@@ -10,9 +10,14 @@ import com.company.enums.TaskStatus;
 import java.util.List;
 
 public interface TaskService {
+    List<TaskResponse> getTasksByCategoryId( Integer categoryId);
+
     Task createTask(TaskRequest taskRequest, Integer userId);
+    List<TaskResponse> searchTask(TaskStatus status);
 
     void deleteTask(Integer taskId);
 
-    Task updateTask(TaskRequest taskRequest, Integer taskId, Integer userId);
+    void updateTask(TaskRequest taskRequest, Integer taskId);
+
+    List<Category> getCategoriesByTaskId(Integer taskId);
 }

@@ -2,20 +2,15 @@ package com.company.entity;
 
 import com.company.enums.PriorityStatus;
 import com.company.enums.TaskStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,14 +32,13 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "tasks")
-    @JsonIgnore
-    private List<Category> category;
+    @ManyToMany
+    @JoinTable(
+            name = "task_category",
+            joinColumns = @JoinColumn(name = "task_id",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id",referencedColumnName = "id")
+    )
+    private Set<Category> category;
     private LocalDateTime deadline;
     @Enumerated(EnumType.STRING)
     private TaskStatus status;

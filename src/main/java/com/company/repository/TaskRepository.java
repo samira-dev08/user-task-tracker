@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task,Integer> {
     @Query(value = "SELECT j FROM Task j WHERE  j.status=?1 ")
     Optional<List<Task>> findTaskByStatus(TaskStatus taskStatus);
+    Optional<List<Task>> findTaskByCategoryId(Integer categoryId);
+
 
     Optional<Task> findByIdAndIsActive(Integer taskId, Integer isActive);
 }

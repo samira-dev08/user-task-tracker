@@ -5,6 +5,7 @@ import com.company.dto.request.SignupRequest;
 import com.company.dto.request.TokenRefreshRequest;
 import com.company.dto.response.JwtResponse;
 import com.company.dto.response.MessageResponse;
+import com.company.entity.User;
 import com.company.service.UserService;
 import com.company.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
-         userService.registerUser(signupRequest);
-        return ResponseEntity.ok("User registered successfully!" +
-                "\nPlease check your email address for complete registration");
+         User user=userService.registerUser(signupRequest);
+        return ResponseEntity.ok(user.getUsername()+",you are registered successfully!" +
+                "\nPlease check your email address for complete the registration");
     }
 
     @PostMapping("/sign-in")
@@ -35,7 +36,7 @@ public class AuthController {
         return new MessageResponse( token,refreshToken);
     }
 
-    @RequestMapping(value = "/confirm-account",method = {RequestMethod.GET,RequestMethod.POST})
+    @PostMapping( "/confirm-account")
     public ResponseEntity<?> confirmUserAccount(@Valid @RequestParam("token") String confirmationToken) {
         return userService.confirmEmail(confirmationToken);
     }

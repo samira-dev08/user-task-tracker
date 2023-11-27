@@ -43,7 +43,7 @@ public class SecurityConfig {
 //                    .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository())
 
             ;
-//        http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

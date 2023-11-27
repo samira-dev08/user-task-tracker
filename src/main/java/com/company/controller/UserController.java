@@ -18,7 +18,7 @@ public class UserController {
                 HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/reset-password",method = {RequestMethod.GET,RequestMethod.POST})
+    @PostMapping( "/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String token,
                                 @RequestParam String newPassword) {
 

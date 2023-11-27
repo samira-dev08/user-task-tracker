@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -18,13 +19,8 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String name;
-    @ManyToMany
-    @JoinTable(
-            name = "task_category",
-            joinColumns = @JoinColumn(name = "category_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id",referencedColumnName = "id")
-    )
-    private List<Task> tasks;
+    @ManyToMany(mappedBy = "category")
+    private Set<Task> tasks;
 }
